@@ -6,35 +6,40 @@ const modeDark = document.querySelector("#mode-dark");
 
 const languageSelect = document.querySelector("#language-select");
 
-async function fetchTranslations(languageSelect) {
+async function fetchTranslations(language) {
+  try {
+    //i was not fetching the json file here thats why the translations were not working 
 
-function applyTranslations(languageSelect, translation) {
-  const elements = document.querySelectorAll("[data-translate]");
-
-  elements.forEach((element) => {
-    const key = element.getAttribute("data-translate");
-
-    if (translation[languageSelect] && translation[languageSelect][key]) {
-      element.textContent = translation[languageSelect][key];
-    }
-  });
+    const response = await fetch ("lang.json");
+    const translation = await response.json();
+    applyTranslations(language, translation);
+  } catch (error) {
+    console.error("Error fetching translations", error);
+  }
+          function applyTranslations(languageSelect, translation) {
+                const elements = document.querySelectorAll("[data-translate]");
+  
+                     elements.forEach((element) => {
+                      const key = element.getAttribute("data-translate");
+  
+                      if (translation[languageSelect] && translation[languageSelect][key]) {
+                       element.textContent = translation[languageSelect][key];
+      }
+    });
+  } 
 }
-}
-
 window.addEventListener("DOMContentLoaded", () => {
+
   const savedLanguage = localStorage.getItem("language") || "en";
   languageSelect.value = savedLanguage;
   fetchTranslations(savedLanguage);
-});
-
+});     
 languageSelect.addEventListener("change", (event) => {
   const languageSelect = event.target.value;
   localStorage.setItem("language", languageSelect);
   fetchTranslations(languageSelect);
-});
-
-
-
+}
+);  
 
 
 //Mode
